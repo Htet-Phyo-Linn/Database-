@@ -146,3 +146,101 @@ By using `FOR UPDATE`, Transaction 2 will wait until Transaction 1 completes, pr
 ### Summary
 
 Concurrency problems, such as lost updates, occur when multiple transactions try to modify the same data simultaneously without proper synchronization. Using higher isolation levels or explicit locking can help mitigate these issues.
+
+
+
+
+
+
+
+
+
+
+#Types
+
+There are several types of concurrency problems that can occur when multiple transactions are executed concurrently without proper isolation or synchronization. Here are the main types:
+
+### 1. Lost Update
+Occurs when two transactions read the same data and then update it based on the value read. The final update by one transaction overwrites the update made by the other transaction, resulting in a lost update.
+
+**Example:**
+- Transaction 1 reads a value.
+- Transaction 2 reads the same value.
+- Transaction 1 updates the value.
+- Transaction 2 updates the value, overwriting Transaction 1's update.
+
+### 2. Dirty Read
+Occurs when a transaction reads data that has been modified by another transaction but not yet committed. If the other transaction is rolled back, the data read by the first transaction becomes invalid.
+
+**Example:**
+- Transaction 1 updates a value but does not commit.
+- Transaction 2 reads the updated (dirty) value.
+- Transaction 1 rolls back.
+- Transaction 2 has read invalid data.
+
+### 3. Non-Repeatable Read
+Occurs when a transaction reads the same row twice and gets different values each time because another transaction has modified the data and committed in between the two reads.
+
+**Example:**
+- Transaction 1 reads a value.
+- Transaction 2 updates and commits the value.
+- Transaction 1 reads the value again and sees the updated value.
+
+### 4. Phantom Read
+Occurs when a transaction reads a set of rows that satisfy a condition and, during the transaction, another transaction inserts, updates, or deletes rows that satisfy the same condition. This results in a different set of rows when the first transaction reads the data again.
+
+**Example:**
+- Transaction 1 reads a set of rows based on a condition.
+- Transaction 2 inserts or deletes rows that match the condition.
+- Transaction 1 reads the set of rows again and sees a different set.
+
+### 5. Write Skew
+Occurs in a situation where two transactions read overlapping sets of data and then make updates based on the values read. The updates do not conflict directly, but the combined effect of the two transactions violates a business rule.
+
+**Example:**
+- Transaction 1 reads row A and row B.
+- Transaction 2 reads row A and row B.
+- Transaction 1 updates row A based on the value of row B.
+- Transaction 2 updates row B based on the value of row A.
+- The final state of the database violates some business constraint.
+
+### Preventing Concurrency Problems
+
+Concurrency problems can be mitigated using the following techniques:
+
+1. **Isolation Levels:**
+   - **Read Uncommitted:** Allows dirty reads.
+   - **Read Committed:** Prevents dirty reads.
+   - **Repeatable Read:** Prevents dirty reads and non-repeatable reads.
+   - **Serializable:** Prevents dirty reads, non-repeatable reads, and phantom reads.
+
+2. **Locks:**
+   - Use row-level or table-level locks to control access to data.
+   - `FOR UPDATE` clause to lock rows that are being read for update.
+
+3. **Optimistic Concurrency Control:**
+   - Use versioning to detect and resolve conflicts at commit time.
+
+4. **Pessimistic Concurrency Control:**
+   - Lock resources at the beginning of a transaction to prevent other transactions from accessing them until the lock is released.
+
+### Example of Preventing a Dirty Read
+
+Set the transaction isolation level to `READ COMMITTED` to prevent dirty reads:
+
+```sql
+-- Set isolation level to READ COMMITTED
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+-- Transaction 1
+START TRANSACTION;
+UPDATE Employee_Records SET Job_Name = 'Finance Manager' WHERE Eno = 'E0033';
+-- Do not commit yet
+
+-- Transaction 2
+START TRANSACTION;
+SELECT Job_Name FROM Employee_Records WHERE Eno = 'E0033'; -- This will not see the uncommitted update from Transaction 1
+COMMIT;
+```
+
+By understanding these concurrency problems and using appropriate techniques, you can ensure the consistency and integrity of your database even when multiple transactions are executed concurrently.
