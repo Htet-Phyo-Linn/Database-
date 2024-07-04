@@ -1,0 +1,49 @@
+create table Employee_Records (
+    Eno varchar(10),
+    Ename varchar(40),
+    Gender varchar(10),
+    Job_Name varchar(50),
+    Department varchar(20)
+);
+desc Employee_Records;
+
+
+create table Employee_Log (
+    Eno varchar(10),
+    Ename varchar(30),
+    Old_Job_Name varchar(40),
+    New_Job_Name varchar(40),
+    Update_Time Timestamp
+);
+desc Employee_Log;
+
+
+insert into Employee_Records (Eno, Ename, Gender, Job_Name, Department) values
+("E0011", "Smith Tailor", "Male", "Sale Manager", "Marketing"),
+("E0022", "James William", "Male", "Marketing Manager", "Marketing"),
+("E0033", "John Smith", "Male", "Chief Executive Officer", "Administration"),
+("E0044", "Micheal Williams", "Male", "Information Services Manager", "Administration"),
+("E0055", "Kim Marshal", "Female", "Account Manager", "Administration");
+select * from Employee_Records;
+
+
+delimiter //
+create trigger Employee_Trigger
+after update on Employee_Records
+for each row
+begin
+insert into Employee_Log (Eno, Ename, Old_Job_Name, New_Job_Name) values
+(New.Eno, New.Ename, Old.Job_Name, New.Job_Name);
+end;//
+
+update Employee_Records
+set Job_Name = 'Account Manager'
+where Ename = 'John Smith';//
+
+select * from Employee_Log;//
+
+select * from Employee_Records;//
+
+drop trigger Employee_Trigger;//
+
+delimiter ;
