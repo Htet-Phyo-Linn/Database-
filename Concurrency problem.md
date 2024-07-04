@@ -156,7 +156,7 @@ Concurrency problems, such as lost updates, occur when multiple transactions try
 
 
 
-#Types
+### Types
 
 There are several types of concurrency problems that can occur when multiple transactions are executed concurrently without proper isolation or synchronization. Here are the main types:
 
