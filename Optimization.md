@@ -1,3 +1,5 @@
+### Tr လုပ်ခိုင်းတဲ့ထဲမပါ
+
 Database optimization generally refers to improving the performance and efficiency of database operations. There are several types of optimizations that can be applied to database systems. Let's discuss some common types of optimizations and illustrate them with simple query examples.
 
 ### Types of Database Optimization
