@@ -44,6 +44,4 @@ select * from Employee_Log;//
 
 select * from Employee_Records;//
 
-drop trigger Employee_Trigger;//
-
 delimiter ;
