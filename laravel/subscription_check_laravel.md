@@ -273,7 +273,11 @@ Ensure the Laravel scheduler is running on your server. You can run it manually 
 ```bash
 php artisan schedule:run
 ```
+nsure the Laravel scheduler is running on your server. You can run it Automatically using:
 
+```bash
+php artisan schedule:work
+```
 For production, you would typically set up a cron job to run the Laravel scheduler every minute.
 
 ### Summary
